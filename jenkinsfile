@@ -1,0 +1,35 @@
+#!/bin/groovy
+def buildnumber = BUILD_NUMBER
+
+pipeline {
+    agent any
+    tools {
+     maven 'MAVEN_HOME'
+}
+    parameters {
+        string(name: 'jobStyle', defaultValue: '', description: 'Please write job style?')
+        booleanParam(name: 'TOGGLE', defaultValue: true, description: 'Toggle this value')
+    }
+
+    
+    stages {
+        stage('Example') {
+            steps {
+                echo "Hello ${params.jobstyle}"
+                echo "Toggle: ${params.TOGGLE}"
+
+            }
+        }
+    stage("git-clone"){
+        steps {
+         git 'https://github.com/bhanuprakash678910/mavenproj.git'
+        }
+    }
+    stage("Build"){
+        steps {
+            sh "mvn package"
+            sh "echo ${buildnumber}"
+        }
+    }
+    }
+}
